@@ -1,0 +1,33 @@
+# Model
+model_name: None
+class_name: NL #NL, AP
+valid_data: 3.0T
+#INITIAL SETTINGS
+rand_seed: 123
+nii_size: 384
+epochs: 100
+lr: 0.0005
+batch_size: 8
+
+# Define Loss Value
+focal_gamma: 2
+focal_alpha: 0.5
+
+# Date Name
+date_name: '0508'
+
+# teset configuration
+
+top_layer_path: ['./nii_save/test_data_NL','./nii_save/all_seg_data_NL_zm_2']
+S1_img_stack: ['T3_image_arr_384_valid.npy', 'T3_masks_arr_384_valid.npy']
+S2_img_stack: ['T3_0_onehot_valid.npy', 'T3_0_onehot_train.npy']
+S1_img_stack_train: ['T3_image_arr_384_train.npy', 'T3_masks_arr_384_train.npy']
+S2_img_stack_train: 'T3_0_onehot_train.npy'
+
+#test weight path
+S1_dense: './weights/S1_DenseNet.hdf5'
+S1_res: './weights/S1_ResNet.hdf5'
+S1_vgg: './weights/S1_VGGNet.hdf5'
+S2_Resnet18: './weights/S2_ResNet18_NL.hdf5'
+S2_ResNet50: './weights/S2_ResNet50_NL.hdf5'
+S2_CNN: './weights/S2_CNNs_NL.hdf5'
