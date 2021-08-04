@@ -34,9 +34,10 @@ Edit env parameter value in /utils/model_config_NL or AP.yaml
 
 <h2>Visual Results</h2>
 <img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/is0316.gif'></p>
+<img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/is0345.gif'></p>
 <img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/is0319.gif'></p>
 <img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/is0342.gif'></p>
-<img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/is0337.gif'></p>
+
 
 <h3>Reference</h3>
 <a href='https://github.com/albumentations-team/albumentations'> Albumentations</a></p>
