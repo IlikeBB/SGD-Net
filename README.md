@@ -25,6 +25,7 @@ Edit env parameter value in /utils/model_config_NL or AP.yaml
 
 ```text
 !python 02.S2_AP_Training.py
+
 !python 02.S2_NL_Training.py
 ```
 <h2>Testing</h2>
