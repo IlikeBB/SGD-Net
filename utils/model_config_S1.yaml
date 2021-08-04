@@ -1,0 +1,24 @@
+# Model
+model_name: 2DDenseUnet
+BACKBONE: densenet121
+# Data path
+# MRI_nii_folder_path: nii_save/all_seg_data_NL_zm_2/
+MRI_nii_folder_path: "./my_data/datasets/all_seg_data_NL_zm_2/"
+save_path: checkpoints/S1-segment/
+
+train_img_p3: "T3_image_arr_384_train.npy"
+train_msk_p3: "T3_masks_arr_384_train.npy"
+valid_img_p3: "T3_image_arr_384_valid.npy"
+valid_msk_p3: "T3_masks_arr_384_valid.npy"
+
+#INITIAL SETTINGS
+rand_seed: 123
+nii_size: 384
+epochs: 150
+lr: 0.001
+batch_size: 8
+
+# Define Loss Value
+
+# Date Name
+date_name: '0504'

@@ -1,0 +1,23 @@
+# Model
+model_name: 3DResnet18
+class_name: NL
+# Data path
+# MRI_nii_folder_path: nii_save/test_data_NL/
+MRI_nii_folder_path: "./my_data/datasets/all_seg_data_NL_zm_2/"
+save_path: checkpoints/S2_nl_res18/
+
+valid_data: 3.0T
+#INITIAL SETTINGS
+rand_seed: 123
+nii_size: 384
+epochs: 100
+lr: 0.0005
+batch_size: 6
+
+# Define Loss Value
+focal_gamma: 2
+focal_alpha: 0.5
+# alpha: 0.25{0407}
+
+# Date Name
+date_name: '0508'
