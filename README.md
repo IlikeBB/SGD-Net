@@ -1,3 +1,11 @@
+<h2>Experiment Environment</h2>
+
+```text
+OS: Ubuntu 16.04
+CUDA: 10.2
+GPU: Nvidia GTX 1080Ti x 1
+```
+
 <h2>Build Virtual Environment(Using Conda) </h2>
 
 ```text
