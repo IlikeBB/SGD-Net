@@ -13,15 +13,23 @@ GPU: Nvidia GTX 1080Ti x 1
 
 !conda activate MRI_tf2
 ```
+<h2>Data Preparing</h2>
+<b><h3>Training S1 Semantic Segmentation Network</h3></p>
+> *Edit env parameter value in `/utils/model_config_S1.yaml`
+ 
+```text
+!python 01.S1_Training.py
+```
+
 <h2>Training</h2>
 <b><h3>Training S1 Semantic Segmentation Network</h3></p>
-Edit env parameter value in /utils/model_config_S1.yaml
+> *Edit env parameter value in `/utils/model_config_S1.yaml`
 
 ```text
 !python 01.S1_Training.py
 ```
 <b><h3>Training S2 3D Classification Network</h3></p>
-Edit env parameter value in /utils/model_config_NL or AP.yaml
+> *Edit env parameter value in `/utils/model_config_NL or AP.yaml`
 
 ```text
 !python 02.S2_AP_Training.py
