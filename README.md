@@ -14,7 +14,7 @@ OS: Ubuntu 16.04
 CUDA: 10.2
 GPU: Nvidia GTX 1080Ti x 1
 ```
-## Build Virtual Environment(Using Conda)
+## Build Virtual Environment (Using Conda)
 
 ```
 !conda env create -f MRI_tf2.yml
