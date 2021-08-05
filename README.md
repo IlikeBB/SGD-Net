@@ -15,7 +15,7 @@ GPU: Nvidia GTX 1080Ti x 1
 ```
 
 ## Model Architecture
-<img src=''>
+<img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/%E6%9E%B6%E6%A7%8B%E5%9C%96.jpg'>
 
 
 
@@ -45,6 +45,8 @@ GPU: Nvidia GTX 1080Ti x 1
 ## Testing
 
 ## Perfromace Plot
+<img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/fig4-5%20revise%20table.001.png'>
+<img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/fig4-5%20revise%20table.002.png'>
 
 ## Visual Results
 <img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/is0309.gif'></p>
