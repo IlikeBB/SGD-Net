@@ -21,7 +21,7 @@ GPU: Nvidia GTX 1080Ti x 1
 !pip install scikit-image
 ```
 > * Loading nii or nii.gz data and transformation to numpy data array.
-> * Please refer to `nii data loading.ipynb`
+> * Please refer to `nii data loading.ipynb` build your dataset array or build random data array.
 ```
  example:
  ./data_set/...
@@ -32,23 +32,29 @@ GPU: Nvidia GTX 1080Ti x 1
                   .
      n|     n.nii ->     n.npy
 ```
+```
+concate data array-> [Sample Number, depth, width, height] ([140,32,384,384])
+```
 
 ## Training
 ### Training S1 Semantic Segmentation Network
-> * Edit env parameter value in `/utils/model_config_S1.yam`.
 ```
 !python 01.S1_Training.py
 ```
+> * Edit env parameter value in `/utils/model_config_S1.yam`.
 
 ### Training S2 3D Classification Network
-> * Edit env parameter value in `/utils/model_config_NL or AP.yaml`.
 ```
 !python 02.S2_AP_Training.py
 
 !python 02.S2_NL_Training.py
 ```
+> * Edit env parameter value in `/utils/model_config_NL or AP.yaml`.
 
 ## Testing
+```
+pip install -U scikit-learn
+```
 > * Please refer to `03.evaluate.ipynb`
 > * Edit env parameter value in `/utils/model_config.yaml`.
 
