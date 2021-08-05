@@ -5,7 +5,6 @@ OS: Ubuntu 16.04
 CUDA: 10.2
 GPU: Nvidia GTX 1080Ti x 1
 ```
-
 ## Build Virtual Environment(Using Conda)
 
 ```
@@ -13,16 +12,19 @@ GPU: Nvidia GTX 1080Ti x 1
 
 !conda activate MRI_tf2
 ```
-
 ## Model Architecture
 <img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/%E6%9E%B6%E6%A7%8B%E5%9C%96.jpg'>
 
-
-
 ## Data Preparing
+```
+!pip install nibabel
+!pip install scikit-image
+```
+> *Loading nii or nii.gz data and transformation to numpy data array.
+> *Please refer to `nii data loading.ipynb`
+
 ### Training S1 Semantic Segmentation Network
 > *Edit env parameter value in `/utils/model_config_S1.yaml`.
- 
 ```
 !python 01.S1_Training.py
 ```
@@ -30,18 +32,18 @@ GPU: Nvidia GTX 1080Ti x 1
 ## Training
 ### Training S1 Semantic Segmentation Network
 > *Edit env parameter value in `/utils/model_config_S1.yaml`.
-
 ```
 !python 01.S1_Training.py
 ```
+
 ### Training S2 3D Classification Network
 > *Edit env parameter value in `/utils/model_config_NL or AP.yaml`.
-
 ```
 !python 02.S2_AP_Training.py
 
 !python 02.S2_NL_Training.py
 ```
+
 ## Testing
 
 ## Perfromace Plot
