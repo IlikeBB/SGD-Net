@@ -1,46 +1,52 @@
-<h2>Experiment Environment</h2>
+## Experiment Environment
 
-```text
+```
 OS: Ubuntu 16.04
 CUDA: 10.2
 GPU: Nvidia GTX 1080Ti x 1
 ```
 
-<h2>Build Virtual Environment(Using Conda) </h2>
+## Build Virtual Environment(Using Conda)
 
-```text
+```
 !conda env create -f MRI_tf2.yml
 
 !conda activate MRI_tf2
 ```
-<h2>Data Preparing</h2>
-<b><h3>Training S1 Semantic Segmentation Network</h3></p>
-> *Edit env parameter value in `/utils/model_config_S1.yaml`
+
+## Model Architecture
+<img src=''>
+
+
+
+## Data Preparing
+### Training S1 Semantic Segmentation Network
+> *Edit env parameter value in `/utils/model_config_S1.yaml`.
  
-```text
+```
 !python 01.S1_Training.py
 ```
 
-<h2>Training</h2>
-<b><h3>Training S1 Semantic Segmentation Network</h3></p>
-> *Edit env parameter value in `/utils/model_config_S1.yaml`
+## Training
+### Training S1 Semantic Segmentation Network
+> *Edit env parameter value in `/utils/model_config_S1.yaml`.
 
-```text
+```
 !python 01.S1_Training.py
 ```
-<b><h3>Training S2 3D Classification Network</h3></p>
-> *Edit env parameter value in `/utils/model_config_NL or AP.yaml`
+### Training S2 3D Classification Network
+> *Edit env parameter value in `/utils/model_config_NL or AP.yaml`.
 
-```text
+```
 !python 02.S2_AP_Training.py
 
 !python 02.S2_NL_Training.py
 ```
-<h2>Testing</h2>
+## Testing
 
-<h2>Perfromace Plot</h2>
+## Perfromace Plot
 
-<h2>Visual Results</h2>
+## Visual Results
 <img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/is0309.gif'></p>
 <img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/is0316.gif'></p>
 <img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/is0323.gif'></p>
