@@ -1,3 +1,12 @@
+# S2-F3DD
+## Abstract
+#### Background and Purpose
+> Neuroimaging is valuable for clinical decision support in acute ischemic stroke (AIS). Diffusion-weighted imaging (DWI) is the representative MRI sequence to timely, sensitively, and accurately reflect ischemia injuries to brain tissue. However, the complexity of MRI elevates the threshold for instantaneously precise interpretation of the images. Therefore, this work leverage machine learning to segment and classify the AIS lesions on DWI images. We focused on model development, performance comparisons, and utilization for decision making.
+#### Methods
+> We enrolled brain MRI images of AIS during 2017-2020 in a tertiary teaching hospital. DWI were analyzed by the two-stage fully 3D detector (2S-F3DD), composed of a U-shaped stage 1 (S1) model for segmentation and a stage 2 (S2) model for classification. An image review board labeled images to provide ground truth for model training and testing. The binary classes in S2 were AIS lesion size (lacune vs. non-lacune) and circulatory territory of lesion location (anterior vs. posterior circulation). We compared different backbones of 2S-F3DD and contrasted them with one-stage classifiers.
+#### Conclusions
+> The 2S-F3DD precisely segmented AIS lesions on DWI and accurately classified lesion size and location. Based on the two-stage design, combinations of different backbones for S1 U-Net and S2 classifier performed superiorly to the one-stage ResNet, DenseNet, and 3D CNNs. The U-shaped architecture of S1 was considered crucial for satisfactory model performance. In the future, the deployment of 2S-F3DD to the emergency health care system would improve AIS patient care.
+
 ## Experiment Environment
 
 ```
