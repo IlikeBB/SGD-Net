@@ -53,7 +53,7 @@ concate data array-> [Sample Number, depth, width, height] ([140,32,384,384])
 
 ## Testing
 ```
-pip install -U scikit-learn
+!pip install -U scikit-learn
 ```
 > * Please refer to `03.evaluate.ipynb`
 > * Edit env parameter value in `/utils/model_config.yaml`.
