@@ -54,8 +54,9 @@ concate data array-> [Sample Number, depth, width, height] ([140,32,384,384])
 
 ### Training S2 3D Classification Network
 ```
-! pip install git+https://github.com/mjkvaak/ImageDataAugmentor
-
+!pip install git+https://github.com/mjkvaak/ImageDataAugmentor
+```
+```
 !python 02.S2_AP_Training.py
 
 !python 02.S2_NL_Training.py
