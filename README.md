@@ -26,6 +26,9 @@ GPU: Nvidia GTX 1080Ti x 1
 
 ## Data Preparing
 ```
+!pip install albumentations==0.4.6
+!pip install image-classifiers==1.0.0
+!pip install efficientnet==1.0.0
 !pip install nibabel
 !pip install scikit-image
 ```
