@@ -46,6 +46,9 @@ concate data array-> [Sample Number, depth, width, height] ([140,32,384,384])
 ```
 
 ## Training
+```
+!pip install git+https://github.com/mjkvaak/ImageDataAugmentor
+```
 ### Training S1 Semantic Segmentation Network
 ```
 !python 01.S1_Training.py
@@ -53,12 +56,9 @@ concate data array-> [Sample Number, depth, width, height] ([140,32,384,384])
 > * Edit env parameter value in `/utils/model_config_S1.yam`.
 
 ### Training S2 3D Classification Network
-```
-!pip install git+https://github.com/mjkvaak/ImageDataAugmentor
-```
+
 ```
 !python 02.S2_AP_Training.py
-
 !python 02.S2_NL_Training.py
 ```
 > * Edit env parameter value in `/utils/model_config_NL or AP.yaml`.
