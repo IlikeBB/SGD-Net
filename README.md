@@ -26,7 +26,6 @@ GPU: Nvidia GTX 1080Ti x 1
 
 ## Data Preparing
 ```
-!pip install albumentations==0.4.6
 !pip install nibabel
 !pip install scikit-image
 ```
@@ -55,6 +54,8 @@ concate data array-> [Sample Number, depth, width, height] ([140,32,384,384])
 
 ### Training S2 3D Classification Network
 ```
+! pip install git+https://github.com/mjkvaak/ImageDataAugmentor
+
 !python 02.S2_AP_Training.py
 
 !python 02.S2_NL_Training.py
