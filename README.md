@@ -75,9 +75,10 @@ concate data array-> [Sample Number, depth, width, height] ([140,32,384,384])
 <img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/fig4-5%20revise%20table.002.png'>
 
 ## Visual Results
-<img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/is0309.gif'></p>
-<img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/is0316.gif'></p>
+<img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/is0302.gif'></p>
 <img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/is0323.gif'></p>
+<img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/is0319.gif'></p>
+<img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/is0337.gif'></p>
 
 ## Reference
 #### Data Augmentation reference from<a href='https://github.com/albumentations-team/albumentations'> Albumentations</a>, <a href='https://github.com/mjkvaak/ImageDataAugmentor'> ImageDataAugmentor</a>.
