@@ -1,4 +1,4 @@
-# 2S-F3DD: Two-stage fully 3D detector for joint segmentation and classification for diffusion weighted MRI of acute ischemic stroke
+# Toward Explainable Semantic Segmentation Guided Detector for Segmentation and Classification of Diffusion-Weighted MRI of Acute Ischemic Stroke
 ## Abstract
 #### Background and Purpose
 > Neuroimaging is valuable for clinical decision support in acute ischemic stroke (AIS). Diffusion-weighted imaging (DWI) is the representative MRI sequence to timely, sensitively, and accurately reflect ischemia injuries to brain tissue. However, the complexity of MRI elevates the threshold for instantaneously precise interpretation of the images. Therefore, this work leverage machine learning to segment and classify the AIS lesions on DWI images. We focused on model development, performance comparisons, and utilization for decision making.
