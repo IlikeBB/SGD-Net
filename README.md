@@ -17,9 +17,9 @@ GPU: Nvidia GTX 1080Ti x 1
 ## Build Virtual Environment (Using Conda)
 
 ```
-!conda env create -f MRI_tf2.yml
+!conda env create -f SGD.yml
 
-!conda activate MRI_tf2
+!conda activate SGD
 ```
 ## Model Architecture
 <img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/%E6%9E%B6%E6%A7%8B%E5%9C%96.jpg'>
