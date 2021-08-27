@@ -219,7 +219,6 @@ dependencies:
     - gpy==1.9.9
     - gpyopt==1.2.6
     - image-classifiers==1.0.0
-    - imagedataaugmentor==0.0.0
     - imgaug==0.4.0
     - importlib-resources==5.1.0
     - itsdangerous==1.1.0
