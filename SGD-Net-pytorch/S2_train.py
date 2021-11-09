@@ -33,12 +33,18 @@ if True:
 def tio_process(nii_3t_, table_3t_, basepath_='./dataset/S2_data/train/'):
     subjects_ = []
     for  (nii_path, nii_table) in zip(nii_3t_ , table_3t_):
-        subject = tio.Subject(
-            dwi = tio.ScalarImage(os.path.join(basepath_, nii_path)), 
-            nl  = nii_table[4], 
-            ap = nii_table[3], 
-            score=[])
-        subjects_.append(subject)
+        if (params['type']=='ap') and (nii_table[3]=='A' or nii_table[3]=='P'):
+            subject = tio.Subject(
+                dwi = tio.ScalarImage(os.path.join(basepath_, nii_path)), 
+                ap = nii_table[3], 
+                score=[])
+            subjects_.append(subject)
+        elif (params['type']=='nl'):
+            subject = tio.Subject(
+                dwi = tio.ScalarImage(os.path.join(basepath_, nii_path)), 
+                nl  = nii_table[4], 
+                score=[])
+            subjects_.append(subject)
     return subjects_
 
 class logs_realtime_reply:
@@ -49,7 +55,7 @@ class logs_realtime_reply:
         self.avg_fp = 0
         self.avg_fn = 0
         # self.running_metic = {"Loss":0, "TP":0, "FP":0, "FN": 0, "Spec": 0, "Sens": 0}
-        self.running_metic = {"Loss":0, "Spec": 0, "Sens": 0}
+        self.running_metic = {"Loss":0, "Accuracy":0, "Spec": 0, "Sens": 0}
         self.end_epoch_metric = None
     def metric_stack(self, inputs, targets, loss):
         # print(inputs)
@@ -62,17 +68,15 @@ class logs_realtime_reply:
         FN = int((GT * (1-SR)).sum()) #FN
         TN = int(((1-GT) * (1-SR)).sum()) #TN
         FP = int(((1-GT) * SR).sum()) #FP
+        self.running_metic['Accuracy'] += round((TP + TN)/(TP + TN + FP + FN), 5)*100
         self.running_metic['Sens'] += round(float(TP)/(float(TP+FN) + 1e-6), 5)
         self.running_metic['Spec'] += round(float(TN)/(float(TN+FP) + 1e-6), 5)
 
     def mini_batch_reply(self, current_step, epoch, iter_len):
         # avg_reply_metric = {"Loss":None, "TP":None, "FP":None, "FN": None, "Spec": None, "Sens": None}
-        avg_reply_metric = {"Loss":None, "Spec": None, "Sens": None}
+        avg_reply_metric = {"Loss":None, "Accuracy": None,"Spec": None, "Sens": None}
         for j in avg_reply_metric:
-            if j in 'TP FP FN':
-                avg_reply_metric[j] = int(self.running_metic[j]/int(current_step))
-            else:
-                avg_reply_metric[j] = round(self.running_metic[j]/int(current_step),5)
+            avg_reply_metric[j] = round(self.running_metic[j]/int(current_step),5)
         
         if current_step ==iter_len:
             self.end_epoch_metric = avg_reply_metric
@@ -86,12 +90,12 @@ def model_create(depth=18):
     model.to(device)
     return model
 
-def label2value(label, images):
+def label2value(label):
     if params['type']=='nl':
         target = [0 if i=='N' else 1 for i in label]
     else:
         target = [0 if i=='A' else 1 for i in label]
-    return torch.LongTensor(target).to(device), images.to(device)
+    return torch.LongTensor(target).to(device)
 
 # model train
 def train(train_loader, model, criterion, optimizer, epoch):
@@ -100,8 +104,8 @@ def train(train_loader, model, criterion, optimizer, epoch):
     stream = tqdm(train_loader)
    
     for i, data in enumerate(stream, start=1):
-        images = data['dwi'][tio.DATA]
-        target, images = label2value(data[params['type']], images)
+        images = data['dwi'][tio.DATA].to(device)
+        target = label2value(data[params['type']])
         output = model(images).squeeze(1)
         loss = criterion(output, target)
         optimizer.zero_grad()
@@ -126,8 +130,8 @@ def validate(valid_loader, model, criterion, epoch):
     stream_v = tqdm(valid_loader)
     with torch.no_grad():
         for i, data in enumerate(stream_v, start=1):
-            images = data['dwi'][tio.DATA]
-            target, images = label2value(data[params['type']], images)
+            images = data['dwi'][tio.DATA].to(device)
+            target = label2value(data[params['type']])
             images = images.to(device)
             target = target.to(device)
             output = model(images).squeeze(1)
@@ -146,7 +150,7 @@ def validate(valid_loader, model, criterion, epoch):
                     'epoch': epoch, 'model_state_dict': model.state_dict(), 'optimizer_state_dict': optimizer.state_dict(), 
                     'loss':  current_loss,}, save_ck_name)
             print('save...', save_ck_name)
-            best_ck_name = f'{ck_pth}/best-{project_name}.pt'
+            best_ck_name = f'{ck_pth}/best - {project_name}.pt'
             torch.save({
                     'epoch': epoch, 'model_state_dict': model.state_dict(), 'optimizer_state_dict': optimizer.state_dict(), 
                     'loss':  current_loss,}, best_ck_name)
@@ -169,30 +173,9 @@ def  train_valid_process_main(model, training_set, validation_set, batch_size):
         validate(valid_loader, model, loss, epoch)
     return model
 
-if True: #data augmentation, dataloader, 
-    training_subjects = tio_process(nii_3t_train, table_3t_train, basepath_ = './dataset/S2_data/train/')
-    validation_subjects = tio_process(nii_3t_valid, table_3t_valid, basepath_ = './dataset/S2_data/valid/')
-
-    # Transform edit
-    training_transform = tio.Compose([
-        # tio.HistogramStandardization({'mri': landmarks}),
-        tio.ZNormalization(masking_method=tio.ZNormalization.mean),
-        tio.OneOf({
-            tio.RandomAffine(): 0.8,
-            tio.RandomElasticDeformation(): 0.2,
-        }),
-    ])
-    validation_transform = tio.Compose([
-        # tio.HistogramStandardization({'mri': landmarks}),
-        tio.ZNormalization(masking_method=tio.ZNormalization.mean),
-    ])
-    training_set = tio.SubjectsDataset(training_subjects, transform=training_transform)
-
-    validation_set = tio.SubjectsDataset(validation_subjects, transform=validation_transform)
-
 if True: #model record
     params = {
-        "type": "nl",
+        "type": "ap",
         "model": '3dresnet', #baseline = 'resnet18'
         "model_depth": 18,
         "device": "cuda",
@@ -203,7 +186,29 @@ if True: #model record
         "clip":0.5,
         "adjust01": " ",
         # "augment": "Affine"
-    }
+        }
+
+if True: #data augmentation, dataloader, 
+    training_subjects = tio_process(nii_3t_train, table_3t_train, basepath_ = './dataset/S2_data/train/')
+    validation_subjects = tio_process(nii_3t_valid, table_3t_valid, basepath_ = './dataset/S2_data/valid/')
+    print('Training set:', len(training_subjects), 'subjects   ', '||   Validation set:', len(validation_subjects), 'subjects')
+    # Transform edit
+    training_transform = tio.Compose([
+        # tio.HistogramStandardization({'mri': landmarks}),
+        tio.ZNormalization(masking_method=tio.ZNormalization.mean),
+        tio.OneOf({
+            tio.RandomElasticDeformation(): 0.1,
+            tio.RandomFlip(axes=('LR',)): 0.5,
+        }),
+    ])
+    validation_transform = tio.Compose([
+        # tio.HistogramStandardization({'mri': landmarks}),
+        tio.ZNormalization(masking_method=tio.ZNormalization.mean),
+    ])
+    training_set = tio.SubjectsDataset(training_subjects, transform=training_transform)
+
+    validation_set = tio.SubjectsDataset(validation_subjects, transform=validation_transform)
+
     # checkpoint setting
     project_name = f"{params['type']} - {params['model']}{params['model_depth']} - lr_{params['lr']} - CE"
     project_folder = f'2021.11.09.t2 - 3DResNet18'
