@@ -7,10 +7,11 @@ from sklearn.metrics import *
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 from torch.optim import Adam
-from torch.optim.lr_scheduler import CosineAnnealingLR
+from torch.optim.lr_scheduler import CosineAnnealingLR, ReduceLROnPlateau, CosineAnnealingWarmRestarts
 from tqdm import tqdm
 from scipy import ndimage
 from utils.S1_utils import clip_gradient
+from utils.loss import FocalLoss, FocalTverskyLoss
 from utils.model_res import generate_model
 num_workers = multiprocessing.cpu_count()
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -58,8 +59,6 @@ class logs_realtime_reply:
         self.running_metic = {"Loss":0, "Accuracy":0, "Spec": 0, "Sens": 0}
         self.end_epoch_metric = None
     def metric_stack(self, inputs, targets, loss):
-        # print(inputs)
-        # print(targets)
         self.running_metic['Loss'] +=loss
         # metric setting
         _, SR = torch.max(inputs, 1)
@@ -117,14 +116,14 @@ def train(train_loader, model, criterion, optimizer, epoch):
         avg_reply_metric = get_logs_reply.mini_batch_reply(i, epoch, len(stream))
         avg_reply_metric['lr'] = optimizer.param_groups[0]['lr']
         stream.set_description(f"Epoch: {epoch}. Train. {str(avg_reply_metric)}")
-    if epoch>10:
+    if epoch>params['scheduler_epoch']:
         scheduler.step()
     for x in avg_reply_metric:
         # print(avg_reply_metric)
         writer.add_scalar(f'{x}/Train {x}', avg_reply_metric[x], epoch)
 # model validate
 def validate(valid_loader, model, criterion, epoch):
-    global best_vloss
+    global best_vloss, best_vacc
     get_logs_reply2 = logs_realtime_reply()
     model.eval()
     stream_v = tqdm(valid_loader)
@@ -142,10 +141,10 @@ def validate(valid_loader, model, criterion, epoch):
         avg_reply_metric = get_logs_reply2.epoch_reply()
 
     for x in avg_reply_metric:
-        if x =='Loss' and avg_reply_metric[x] < best_vloss:
-            best_vloss = avg_reply_metric[x]
+        if x =='Accuracy' and avg_reply_metric[x] > best_vacc:
+            best_vacc = avg_reply_metric[x]
             current_loss = avg_reply_metric['Loss']
-            save_ck_name = f'{ck_pth}/{project_name} --  epoch:{epoch} | vLoss:{round(current_loss,5)}.pt'
+            save_ck_name = f"{ck_pth}/{project_name} --  epoch:{epoch} | vLoss:{round(current_loss,5)} | vAcc:{round(avg_reply_metric['Accuracy'], 5)}.pt"
             torch.save({
                     'epoch': epoch, 'model_state_dict': model.state_dict(), 'optimizer_state_dict': optimizer.state_dict(), 
                     'loss':  current_loss,}, save_ck_name)
@@ -159,8 +158,9 @@ def validate(valid_loader, model, criterion, epoch):
         writer.add_scalar(f'{x}/Valida {x}', avg_reply_metric[x], epoch)
 # X
 def  train_valid_process_main(model, training_set, validation_set, batch_size):
-    global best_vloss
+    global best_vloss, best_vacc
     best_vloss = np.inf
+    best_vacc = 0.00
     # Subject Dataloader Building
     train_loader = torch.utils.data.DataLoader(training_set, batch_size=batch_size, shuffle=True,
         num_workers=num_workers)
@@ -168,7 +168,6 @@ def  train_valid_process_main(model, training_set, validation_set, batch_size):
         num_workers=num_workers)
 
     for epoch in range(1, params["epochs"] + 1):
-        # adjust_lr(optimizer, params['lr'], epoch, 0.1, 100)
         train(train_loader, model, loss, optimizer, epoch)
         validate(valid_loader, model, loss, epoch)
     return model
@@ -180,12 +179,15 @@ if True: #model record
         "model_depth": 18,
         "device": "cuda",
         "opt": "Adam",
-        "lr": 0.003, #baseline = 0.003
-        "batch_size": 8, #baseline resnet18 : 32
-        "epochs": 60,
+        "lr": 0.001, #baseline = 0.003
+        "scheduler_epoch": 0 , #nl: 5, ap: None
+        "batch_size": 8, #baseline resnet18 : 8
+        "epochs": 200,
         "clip":0.5,
-        "adjust01": " ",
-        # "augment": "Affine"
+        # "adjust01": "CosineAnnealingLR, loss funciton -> focal tversky loss:[0.5, 0.5, 1.00, 1e-6]",
+        "adjust01": "CosineAnnealingWarmRestarts, loss funciton -> focal loss:[0.8,2]",
+        "adjust02": "learning rate 0.003 -> 0.001",
+        "augment": "RandomFlip['AP'], RandomElasticDeformation",
         }
 
 if True: #data augmentation, dataloader, 
@@ -197,8 +199,9 @@ if True: #data augmentation, dataloader,
         # tio.HistogramStandardization({'mri': landmarks}),
         tio.ZNormalization(masking_method=tio.ZNormalization.mean),
         tio.OneOf({
-            tio.RandomElasticDeformation(): 0.1,
-            tio.RandomFlip(axes=('LR',)): 0.5,
+            tio.RandomElasticDeformation(): 0.2,
+            tio.RandomFlip(axes=('AP',), flip_probability=0.5): 1.0,
+            # tio.RandomAffine(degrees=15, scales=(1.0, 1.0)): 0.3,
         }),
     ])
     validation_transform = tio.Compose([
@@ -211,7 +214,7 @@ if True: #data augmentation, dataloader,
 
     # checkpoint setting
     project_name = f"{params['type']} - {params['model']}{params['model_depth']} - lr_{params['lr']} - CE"
-    project_folder = f'2021.11.09.t2 - 3DResNet18'
+    project_folder = f"2021.11.11.t6 - 3DResNet18 - {params['type']}"
     ck_pth = f'./checkpoint/{project_folder}'
     if os.path.exists(ck_pth)==False:
         os.mkdir(ck_pth)
@@ -224,20 +227,23 @@ if True: #data augmentation, dataloader,
     f.writelines([f'{i} : {params[i]} \n' for i in params])
     f.close()
     # tensorboard setting
-    tensorboard_logdir = f'./logsdir/ {project_folder} - {project_name}'
+    tensorboard_logdir = f'./logsdir/S2/ {project_folder} - {project_name}'
     writer=SummaryWriter(tensorboard_logdir)
 
 if True: #model edit area
     # model create
     model = model_create(depth=params['model_depth'])
     # loss
-    loss = torch.nn.CrossEntropyLoss()
+    # loss = torch.nn.CrossEntropyLoss()
+    loss = FocalLoss()
     # optimizer
     if params['opt']=='Adam':
         optimizer = Adam(model.parameters(), lr=params['lr'], betas=(0.9, 0.999), eps=1e-08, weight_decay=0, amsgrad=False)
     else:
         optimizer = torch.optim.SGD(model.parameters(), lr=0.001, momentum=0.9)
-    scheduler = CosineAnnealingLR(optimizer, T_max = 20)
+    # scheduler = CosineAnnealingLR(optimizer, T_max = 20)
+    # scheduler = ReduceLROnPlateau(optimizer, mode='min', factor=0.01, patience=2)
+    scheduler = CosineAnnealingWarmRestarts(optimizer, T_0=5, T_mult=2, last_epoch=-1)
     logs  = train_valid_process_main(model, training_set, validation_set, params['batch_size'])
 
 writer.close()
