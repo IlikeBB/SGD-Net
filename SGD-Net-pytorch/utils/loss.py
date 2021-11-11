@@ -1,24 +1,24 @@
 #PyTorch
 import torch.nn.functional as F
+
 import torch.nn as nn
 import torch
 # loss function
 class FocalTverskyLoss(nn.Module):
     def __init__(self, weight=None, size_average=True):
-        self.alpha = 0.3
-        self.beta = 0.7
-        self.gamma = 0.75
+        self.alpha = 0.5
+        self.beta = 0.5
+        self.gamma = 1.00
         self.smooth = 1e-6
         super(FocalTverskyLoss, self).__init__()
 
     def forward(self, inputs, targets):
         #comment out if your model contains a sigmoid or equivalent activation layer
-        inputs = F.sigmoid(inputs)       
-        
+        inputs = torch.sigmoid(inputs)
+        targets  = F.one_hot(targets, num_classes=2)
         #flatten label and prediction tensors
         inputs = inputs.view(-1)
         targets = targets.view(-1)
-        
         #True Positives, False Positives & False Negatives
         TP = (inputs * targets).sum()    
         FP = ((1-targets) * inputs).sum()
@@ -27,6 +27,26 @@ class FocalTverskyLoss(nn.Module):
         Tversky = (TP + self.smooth) / (TP + self.alpha*FP + self.beta*FN + self.smooth)  
         FocalTversky = (1 - Tversky)**self.gamma
         return FocalTversky
+
+class FocalLoss(nn.Module):
+    def __init__(self, weight=None, size_average=True):
+        super(FocalLoss, self).__init__()
+
+    def forward(self, inputs, targets, alpha=0.8, gamma=2, smooth=1):
+        
+        inputs = torch.sigmoid(inputs)       
+        targets  = F.one_hot(targets, num_classes=2)
+        #flatten label and prediction tensors
+        inputs = inputs.view(-1)
+        targets = targets.view(-1)
+        
+        #first compute binary cross-entropy 
+        BCE = F.binary_cross_entropy(inputs, targets.float(), reduction='mean')
+        BCE_EXP = torch.exp(-BCE)
+        focal_loss = alpha * (1-BCE_EXP)**gamma * BCE
+                       
+        return focal_loss
+
 
 class DiceBCELoss(nn.Module):
     def __init__(self, weight=None, size_average=True):
