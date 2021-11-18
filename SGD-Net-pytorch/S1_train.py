@@ -4,13 +4,14 @@ import segmentation_models_pytorch as smp
 import nibabel as nib
 import albumentations as A
 from sklearn.metrics import *
-from utils.loss import DiceBCELoss
+from utils.loss import DiceBCELoss, FocalTverskyLoss
 from utils.S1_utils import clip_gradient
 from albumentations.pytorch import ToTensorV2
 from torch.utils.data import DataLoader
 from torch.utils.tensorboard import SummaryWriter
 from torch.optim import Adam
-from torch.optim.lr_scheduler import CosineAnnealingLR
+from torch.optim.lr_scheduler import CosineAnnealingLR, CosineAnnealingWarmRestarts
+from torch.autograd import Variable
 from scipy import ndimage
 from tqdm import tqdm   
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
@@ -20,15 +21,14 @@ cudnn.benchmark = True
 # data augmentation
 transform = A.Compose(
     [   
-        A.Affine(scale=[0.75, 0.95] ,translate_percent=[0.1,0.2] ,rotate=[-15,15] ,p=0.2),
+        # A.Affine(scale=[0.50, 1.00] ,translate_percent=[0.1,0.2] ,rotate=[-15,15] ,p=0.2),
         A.HorizontalFlip(p=0.5),
-        A.ShiftScaleRotate(shift_limit=0.0, scale_limit=0.15, rotate_limit=15, p=0.5),
-        A.GridDistortion(p=0.3),
+        A.Rotate(limit=5, p=0.5),
+        A.ShiftScaleRotate(shift_limit=0.0, scale_limit=0.15, rotate_limit=5, p=0.5),
+        # A.GridDistortion(p=0.3),
         ToTensorV2(),
     ]
 )
-
-
 transformv = A.Compose(
     [   
         ToTensorV2(),
@@ -84,31 +84,38 @@ class logs_realtime_reply:
         self.avg_fn = 0
         self.running_metic = {"Loss":0, "dice_coef": 0,  "IoU":0, "TP":0, "FP":0, "FN": 0}
         self.end_epoch_metric = None
+class logs_realtime_reply:
+    def __init__(self):
+        self.running_metic = {"Loss":0, "dice_coef": 0,  "IoU":0, "Spec":0, "Sens":0}
+        self.end_epoch_metric = None
     def metric_stack(self, inputs, targets, loss):
         smooth = 1
         self.running_metic['Loss'] +=loss
         # dice
+        # print("inputs1", inputs)
         inputs = torch.sigmoid(inputs)
+        # print("inputs2", inputs)
         #flatten label and prediction tensors
         inputs = inputs.view(-1)
         targets = targets.view(-1)
         intersection = (inputs * targets).sum()
         dice = ((2.*intersection)/(inputs.sum() + targets.sum())).item()
+        
         self.running_metic['dice_coef'] += round(dice, 5)
         # IoU
         total = (inputs + targets).sum()
         union = total - intersection 
         IoU = ((intersection + smooth)/(union + smooth)).item()
         self.running_metic['IoU']+=round(IoU, 5)
-        # TP
-        self.running_metic['TP'] += int((inputs * targets).sum().item())
-        # FP
-        self.running_metic['FP'] += int(((1-targets) * inputs).sum().item())
-        # FN
-        self.running_metic['FN'] += int((targets * (1-inputs)).sum().item())
+        TP = int((inputs * targets).sum()) #TP
+        FN = int((targets * (1-inputs)).sum()) #FN
+        TN = int(((1-targets) * (1-inputs)).sum()) #TN
+        FP = int(((1-targets) * inputs).sum()) #FP
+        self.running_metic['Sens'] += round(float(TP)/(float(TP+FN) + 1e-6), 5)
+        self.running_metic['Spec'] += round(float(TN)/(float(TN+FP) + 1e-6), 5)
 
     def mini_batch_reply(self, current_step, epoch, iter_len):
-        avg_reply_metric = {"Loss":None, "dice_coef": None,  "IoU": None,"TP":None, "FP":None, "FN": None}
+        avg_reply_metric = {"Loss":None, "dice_coef": None,  "IoU": None, "Spec": None, "Sens": None}
         for j in avg_reply_metric:
             if j in 'TP FP FN':
                 avg_reply_metric[j] = int(self.running_metic[j]/int(current_step))
@@ -124,7 +131,8 @@ class logs_realtime_reply:
 
 # model create
 def model_create():
-    model = smp.Unet(encoder_name=params['model'], encoder_weights=None, in_channels=1, classes=1)
+    model = smp.Unet(encoder_name=params['model'], encoder_weights=None, 
+                                            in_channels=1, classes=1, decoder_attention_type=None)
     model.to(device)
     return model
 
@@ -142,21 +150,21 @@ def train(train_loader, model, criterion, optimizer, epoch):
         loss = criterion(output, target)
         optimizer.zero_grad()
         loss.backward()
-        clip_gradient(optimizer, params['clip'])
+        # clip_gradient(optimizer, params['clip'])
         optimizer.step()
         
         get_logs_reply.metric_stack(output, target, loss = round(loss.item(), 5))
         avg_reply_metric = get_logs_reply.mini_batch_reply(i, epoch, len(stream))
         avg_reply_metric['lr'] = optimizer.param_groups[0]['lr']
         stream.set_description(f"Epoch: {epoch}. Train. {str(avg_reply_metric)}")
-    if epoch>20:
-        scheduler.step()
+    # if epoch>0:
+    scheduler.step()
     for x in avg_reply_metric:
         # print(avg_reply_metric)
         writer.add_scalar(f'{x}/Train {x}', avg_reply_metric[x], epoch)
 # model validate
 def validate(valid_loader, model, criterion, epoch):
-    global best_dice
+    global best_dice, mini_loss
     get_logs_reply2 = logs_realtime_reply()
     model.eval()
     stream_v = tqdm(valid_loader)
@@ -179,7 +187,10 @@ def validate(valid_loader, model, criterion, epoch):
                     'epoch': epoch, 'model_state_dict': model.state_dict(), 'optimizer_state_dict': optimizer.state_dict(), 
                     'loss':  current_loss,}, save_ck_name)
             print('save...', save_ck_name)
-            best_ck_name = f'{ck_pth}/best-{project_name}.pt'
+        if x=='Loss' and avg_reply_metric[x] <mini_loss:
+            mini_loss = avg_reply_metric[x]
+            current_loss = avg_reply_metric['Loss']
+            best_ck_name = f'{ck_pth}/best- vloss - {project_name}.pt'
             torch.save({
                     'epoch': epoch, 'model_state_dict': model.state_dict(), 'optimizer_state_dict': optimizer.state_dict(), 
                     'loss':  current_loss,}, best_ck_name)
@@ -208,21 +219,25 @@ valid_dataset = DataLoaderSegmentation('./dataset/normalized_zscore/valid/', tra
 # model hyper parameter
 params = {
     'architecture':'unet',
-    "model": 'resnet18', #baseline = 'resnet18'
+    "model": 'densenet121', #baseline = 'resnet18'
     "device": "cuda",
-    "lr": 0.003, #baseline = 0.003
-    "batch_size": 32, #baseline resnet18 : 32
-    "epochs": 60,
+    "lr": 0.001, #baseline = 0.003
+    "batch_size": 12, #baseline resnet18 : 32
+    "epochs": 100,
     "clip":0.5,
-    "adjust01": "optimizer weight decay - cosine decay",
-    "adjust02": "gradient clipping",
-    "augment": "Affine HorizontalFlip ShiftScaleRotate GridDistortion",
+    "adjust01": "CosineAnnealing [t_max: 10], clip_gradient - > X",
+    "adjust02": "gradient clipping, scheduler time: 10epochs",
+    "adjust03": "None",
+    "adjust04": "Dice Cross Entropy - >FocalTverskyLoss [a:0.3, b:0.7, g:2.00],  del negative data",
+    # "adjust04": "Dice Cross Entropy,  del negative data",
+    "augment": "Affine HorizontalFlip, ShiftScaleRotate, Rotate, [GridDistortion -> X]",
+    "fixing": "exclude masks do normalized, fix metric to one class, some augmentation get false format"
     # "augment": "Affine"
 }
 
 # checkpoint setting
-project_name = f"2DRes18Unet - lr_{params['lr']} - DCEL"
-project_folder = f'2021.11.04.t2 - 2DRes18Unet'
+project_name = f"2DDenseNet121Unet - lr_{params['lr']} - FTL"
+project_folder = f'2021.11.18.t1 - 2DDenseNet121Unet'
 ck_pth = f'./checkpoint/{project_folder}'
 if os.path.exists(ck_pth)==False:
     os.mkdir(ck_pth)
@@ -236,7 +251,7 @@ lines = params
 f.writelines([f'{i} : {params[i]} \n' for i in params])
 f.close()
 # tensorboard setting
-tensorboard_logdir = f'./logsdir/ {project_folder} - {project_name}'
+tensorboard_logdir = f'./logsdir/S1/ {project_folder} - {project_name}'
 writer=SummaryWriter(tensorboard_logdir)
 
 
@@ -244,10 +259,12 @@ writer=SummaryWriter(tensorboard_logdir)
 # model create
 model = model_create()
 # loss
-loss = DiceBCELoss()
+# loss = DiceBCELoss()
+loss = FocalTverskyLoss()
 # optimizer
 optimizer = Adam(model.parameters(), lr=params['lr'], betas=(0.9, 0.999), eps=1e-08, weight_decay=0, amsgrad=False)
-scheduler = CosineAnnealingLR(optimizer, T_max = 20)
+scheduler = CosineAnnealingLR(optimizer, T_max=10, eta_min=5e-6)
+# scheduler = CosineAnnealingWarmRestarts(optimizer, T_0=5, T_mult=2, last_epoch=-1)
 logs  = train_valid_process_main(model, train_dataset, valid_dataset, params['batch_size'])
 
 writer.close()
