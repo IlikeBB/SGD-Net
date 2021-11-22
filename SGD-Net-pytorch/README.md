@@ -20,12 +20,6 @@ Python: 3.8.0
 <img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/%E6%9E%B6%E6%A7%8B%E5%9C%96.jpg'>
 
 ## Data Preparing
-```
-!pip install nibabel
-!pip install scikit-image
-!pip install torchio
-!pip install albumentations
-```
 > * S1 must used 2d dimension. Change 3D nii or nii.gz data to 2D slices.
 > * S2 must used 3d dimension.
 > * Please refer to `None` build your dataset array or build random data array.
