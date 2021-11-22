@@ -65,7 +65,7 @@ concate data array-> [Sample Number, depth, width, height] ([140,32,384,384])
 ```
 !pip install -U scikit-learn
 ```
-> * None
+> * `evaluate/S1_S2_test.ipynb`
 
 ## Perfromace Plot
 > * None
