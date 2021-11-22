@@ -62,9 +62,6 @@ concate data array-> [Sample Number, depth, width, height] ([140,32,384,384])
 > * Edit env parameter value in `None`.
 
 ## Testing
-```
-!pip install -U scikit-learn
-```
 > * `evaluate/S1_S2_test.ipynb`
 
 ## Perfromace Plot
