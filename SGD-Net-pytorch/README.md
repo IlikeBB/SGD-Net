@@ -52,6 +52,39 @@ Python: 3.8.0
 ```
 concate data array-> [Sample Number, depth, width, height] ([140,32,384,384])
 ```
+> * If use CGRD dataset, please modify torchio loader code  `{env_name}/../torchio/data/io.py` .
+```
+def read_image(path: TypePath) -> Tuple[torch.Tensor, np.ndarray]:
+    try:
+        result = _read_nibabel(path)
+    except nib.loadsave.ImageFileError as e:
+        message = (
+            f'File "{path}" not understood.'
+            ' Check supported formats by at'
+            ' https://simpleitk.readthedocs.io/en/master/IO.html#images'
+            ' and https://nipy.org/nibabel/api.html#file-formats'
+        )
+        raise RuntimeError(message) from e
+    return result
+
+def _read_nibabel(path: TypePath) -> Tuple[torch.Tensor, np.ndarray]:
+    from scipy import ndimage
+    img = nib.load(str(path))
+    affine = img.header.get_best_affine()
+    data = img.get_fdata(dtype=np.float32)
+    data = check_uint_to_int(data)
+    if affine[1, 1] > 0:
+        data = ndimage.rotate(data, 90, reshape=False, mode="nearest")
+    if affine[1, 1] < 0:
+        data = ndimage.rotate(data, -90, reshape=False, mode="nearest")
+    if affine[1, 1] < 0:                 
+        data = np.fliplr(data)
+    # data = data[::-1]
+    
+    tensor = torch.as_tensor(data.copy())
+    
+    return tensor, affine
+```
 
 ### Training S1 Semantic Segmentation Network
 ```
