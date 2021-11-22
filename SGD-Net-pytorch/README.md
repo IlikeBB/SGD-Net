@@ -66,7 +66,8 @@ def read_image(path: TypePath) -> Tuple[torch.Tensor, np.ndarray]:
         )
         raise RuntimeError(message) from e
     return result
-
+```
+```
 def _read_nibabel(path: TypePath) -> Tuple[torch.Tensor, np.ndarray]:
     from scipy import ndimage
     img = nib.load(str(path))
@@ -78,12 +79,9 @@ def _read_nibabel(path: TypePath) -> Tuple[torch.Tensor, np.ndarray]:
     if affine[1, 1] < 0:
         data = ndimage.rotate(data, -90, reshape=False, mode="nearest")
     if affine[1, 1] < 0:                 
-        data = np.fliplr(data)
-    # data = data[::-1]
-    
+        data = np.fliplr(data)    
     tensor = torch.as_tensor(data.copy())
-    
-    return tensor, affine
+        return tensor, affine
 ```
 
 ### Training S1 Semantic Segmentation Network
