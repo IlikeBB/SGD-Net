@@ -2,14 +2,19 @@
 ## Experiment Environment
 
 ```
-OS: Ubuntu 16.04
+OS: Ubuntu 18.06
 CUDA: 10.2
 GPU: Nvidia GTX 1080Ti x 1
+Python: 3.8.0
 ```
 ## Build Virtual Environment (Using Conda)
 
 ```
-None
+!pip install torch==1.9.1 -y
+!pip install torchio==0.18.62 -y
+!pip install segmentation_models_pytorch
+!pip install albumentations==1.1.0 -y
+!pip install thop
 ```
 ## Model Architecture
 <img src='https://github.com/IlikeBB/F3DD/blob/main/plot_results/%E6%9E%B6%E6%A7%8B%E5%9C%96.jpg'>
