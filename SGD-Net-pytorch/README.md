@@ -75,7 +75,7 @@ def _read_nibabel(path: TypePath) -> Tuple[torch.Tensor, np.ndarray]:
     if affine[1, 1] < 0:                 
         data = np.fliplr(data)    
     tensor = torch.as_tensor(data.copy())
-        return tensor, affine
+    return tensor, affine
 ```
 
 ### Training S1 Semantic Segmentation Network
