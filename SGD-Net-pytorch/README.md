@@ -93,6 +93,13 @@ def _read_nibabel(path: TypePath) -> Tuple[torch.Tensor, np.ndarray]:
 
 ## Testing
 > * `evaluate/S1_S2_test.ipynb`
-
+```
+ap  -   Accuracy  : 91.0 %
+ap  -   Sensitivity  : 0.71429
+ap  -   Specificity  : 1.0
+nl  -   Accuracy  : 93.0 %
+nl  -   Sensitivity  : 0.95833
+nl  -   Specificity  : 0.90476
+```
 ## Perfromace Plot
 > * None
