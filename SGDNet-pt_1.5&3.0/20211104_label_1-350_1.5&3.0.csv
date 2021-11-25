@@ -1,0 +1,312 @@
+ID,排除,1/0: 3T/1.5T MRI,A/P,N/L,Valid data
+is0001,,0,A,L,
+is0002,,0,P,L,
+is0003,,0,P,N,
+is0004,,1,A,N,
+is0005,,0,A,L,
+is0007,,0,A,N,
+is0008,,1,A,N,
+is0009,,0,A,N,
+is0010,,0,P,N,
+is0013,,1,A,N,
+is0014,,0,P,N,
+is0015,,1,A,N,
+is0016,,1,A,L,
+is0018,,0,P,N,
+is0019,,0,P,N,
+is0021,,0,A,N,
+is0024,,1,A,L,
+is0025,,0,A,N,
+is0026,,1,A,N,
+is0027,,1,A,N,
+is0028,,1,A,N,
+is0029,,1,A,N,
+is0030,,0,P,L,
+is0031,,1,P,L,
+is0032,,0,P,N,
+is0033,,1,A,N,
+is0036,,1,P,L,
+is0037,,1,A,N,
+is0038,,1,A,L,
+is0039,,1,A,L,
+is0040,,0,P,N,
+is0041,,1,A,N,
+is0042,,0,A,N,
+is0043,,0,P,L,
+is0045,,1,A,N,
+is0046,,0,P,N,
+is0047,,1,P,N,
+is0048,,1,A,N,
+is0050,,0,P,N,
+is0051,,1,P,N,
+is0052,,0,P,L,
+is0053,,1,A,N,
+is0054,,0,A,N,
+is0056,,0,A,N,
+is0057,,0,A,N,
+is0058,,0,A,N,
+is0059,,1,A,L,
+is0060,,1,P,N,
+is0061,,1,A,L,
+is0062,,0,P,N,
+is0063,,1,P,N,
+is0064,,0,A,N,V
+is0065,,1,P,N,
+is0066,,0,A,L,
+is0067,,0,P,L,
+is0068,,1,A,N,
+is0069,,0,A,L,
+is0070,,0,A,N,V
+is0072,,0,A,N,V
+is0073,,1,A+P,N,
+is0074,,1,P,L,
+is0075,,1,P,L,
+is0077,,0,P,N,V
+is0078,,1,A,N,
+is0079,,0,A,L,
+is0080,,0,P,N,V
+is0082,,0,P,N,V
+is0083,,1,P,N,
+is0084,,0,A,L,
+is0085,,0,A,L,V
+is0086,,1,P,N,
+is0087,,1,P,L,
+is0088,,0,A,L,V
+is0089,,1,P,L,
+is0090,,1,A,L,
+is0091,,1,A,N,
+is0092,,1,A,N,
+is0094,,1,A,N,
+is0095,,1,A,N,
+is0096,,0,A,N,V
+is0097,,1,A,N,
+is0098,,1,P,N,
+is0100,,1,P,N,
+is0102,,1,A,L,
+is0103,,1,A,L,
+is0104,,0,A,L,V
+is0105,,1,P,N,
+is0107,,1,A,N,
+is0108,,0,A,L,V
+is0109,,0,A,N,V
+is0111,,0,A,N,V
+is0112,,1,A,N,
+is0113,,0,A,N,V
+is0114,,0,A,N,V
+is0116,,1,P,L,
+is0117,,0,A,L,V
+is0119,,0,P,L,V
+is0120,,1,P,L,
+is0121,,1,A,N,
+is0123,,0,A,N,V
+is0124,,0,P,N,V
+is0125,,1,A,N,
+is0127,,1,P,N,
+is0128,,1,A,N,
+is0129,,1,P,N,
+is0130,,1,A,N,
+is0131,,0,P,N,V
+is0132,,0,A,N,V
+is0133,,1,P,L,
+is0136,,1,P,L,
+is0137,,0,A,N,V
+is0138,,0,P,N,V
+is0139,,0,P,L,V
+is0140,,0,A,N,V
+is0142,,0,P,N,V
+is0143,,1,A,N,
+is0144,,0,A,L,V
+is0145,,1,A,N,
+is0146,,0,A,N,V
+is0147,,1,A,N,
+is0148,,1,A,L,
+is0149,,1,A,L,
+is0150,,1,A,N,
+is0151,,0,P,L,V
+is0152,,1,A,N,
+is0154,,1,P,N,
+is0155,,1,A,N,
+is0156,,1,A,N,
+is0157,,1,A,N,
+is0158,,1,A,N,
+is0159,,1,A,N,
+is0160,,1,A,N,
+is0161,,1,A,N,
+is0162,,1,P,N,
+is0163,,1,A,N,
+is0164,,1,A+P,N,
+is0165,,1,P,L,
+is0166,,1,A,N,
+is0167,,1,A,N,
+is0168,,1,A+P,L,
+is0169,,1,A+P,N,
+is0170,,1,P,L,
+is0171,,1,A,L,
+is0172,,1,A,L,
+is0173,,1,A,L,
+is0174,,1,A,N,
+is0175,,1,A,L,
+is0176,,1,A+P,N,
+is0177,,1,A,L,
+is0178,,1,P,L,
+is0179,,1,A,N,
+is0180,,1,P,L,
+is0181,,1,P,N,
+is0183,,1,A,N,
+is0184,,1,P,N,
+is0185,,1,A+P,N,
+is0186,,1,A,N,
+is0187,,1,A,N,
+is0188,,1,P,L,
+is0189,,1,A,L,
+is0190,,1,P,N,
+is0191,,1,P,L,
+is0192,,1,A,L,
+is0194,,1,A,N,
+is0195,,1,A+P,L,
+is0196,,1,A,L,
+is0197,,1,A,L,
+is0199,,1,A,L,
+is0201,,1,P,L,
+is0202,,1,P,N,
+is0203,,1,A,N,
+is0204,,1,A,N,
+is0205,,1,A+P,N,
+is0206,,1,A,N,
+is0207,,1,A,N,
+is0208,,1,A,N,
+is0209,,1,A,N,
+is0210,,1,P,L,
+is0211,,1,A,L,
+is0212,,1,A,L,
+is0213,,1,A,N,
+is0214,,1,A,N,
+is0215,,1,A,N,
+is0216,,1,A,N,
+is0217,,1,A,N,
+is0218,,1,A,N,
+is0219,,1,A,N,
+is0220,,1,A,L,
+is0221,,1,A,N,
+is0222,,1,A,N,
+is0223,,1,P,N,
+is0224,,1,A,N,
+is0225,,1,A,N,
+is0226,,1,A,N,
+is0227,,1,A,L,
+is0228,,1,A,L,
+is0229,,1,A,L,
+is0230,,1,A,N,
+is0231,,1,A,N,
+is0232,,1,A,N,V
+is0233,,1,A,L,V
+is0234,,1,P,N,V
+is0235,,1,A,L,V
+is0236,,1,A,N,V
+is0237,,1,A,L,V
+is0238,,0,P,L,V
+is0239,,1,A,L,V
+is0240,,1,A,N,V
+is0241,,1,P,N,V
+is0242,Test data,0,P,N,V
+is0243,,1,P,L,V
+is0244,Test data,0,A,L,V
+is0245,,1,A,L,V
+is0246,Test data,0,A,N,V
+is0247,,1,P,N,V
+is0248,,1,A,N,V
+is0249,Test data,0,A,L,V
+is0250,Test data,0,A,N,V
+is0251,Test data,0,P,L,V
+is0252,,1,P,N,V
+is0253,Test data,0,P,L,V
+is0254,,1,P,N,V
+is0255,Test data,0,A,N,V
+is0256,,1,P,N,V
+is0257,Test data,0,P,L,V
+is0258,Test data,0,P,N,V
+is0259,Test data,0,P,L,V
+is0260,Test data,0,A,N,V
+is0261,Test data,0,A,N,V
+is0262,Test data,0,A,N,V
+is0263,Test data,0,P,N,V
+is0264,Test data,0,A,L,V
+is0265,Test data,0,A,N,V
+is0266,,1,A,N,V
+is0267,,1,P,N,V
+is0268,Test data,0,A,N,V
+is0269,,1,P,L,V
+is0270,,1,A+P,N,V
+is0271,Test data,0,A,N,V
+is0272,,1,A,N,V
+is0273,Test data,0,P,L,V
+is0274,,1,P,L,V
+is0276,,1,A,L,V
+is0278,Test data,0,A,N,V
+is0279,Test data,0,A,N,V
+is0280,Test data,0,P,L,V
+is0281,,1,P,L,V
+is0282,Test data,0,P,N,V
+is0283,Test data,0,A,L,V
+is0284,Test data,0,A,N,V
+is0285,Test data,0,A,N,V
+is0286,,1,P,N,V
+is0287,,1,A,N,V
+is0288,Test data,0,A,N,V
+is0289,,1,A,L,V
+is0290,,1,P,N,V
+is0291,Test data,0,P,L,V
+is0292,Test data,0,A,L,V
+is0293,Test data,0,P,N,V
+is0294,,1,P,L,V
+is0295,Test data,0,P,L,V
+is0296,Test data,0,A,N,V
+is0297,Test data,0,A,N,V
+is0299,,1,A,N,V
+is0300,Test data,0,A,N,V
+is0301,,1,A,L,V
+is0302,Test data,1,P,L,V
+is0304,Test data,1,A,N,V
+is0306,Test data,1,P,L,V
+is0307,Test data,1,A,L,V
+is0308,Test data,1,A,L,V
+is0309,Test data,1,A,L,V
+is0310,Test data,1,A,N,V
+is0311,Test data,1,P,L,V
+is0312,Test data,1,A+P,N,V
+is0313,Test data,1,A+P,N,V
+is0314,Test data,1,A,N,V
+is0315,Test data,1,A,N,V
+is0316,Test data,1,A,L,V
+is0317,Test data,1,A,N,V
+is0318,Test data,1,P,L,V
+is0319,Test data,1,A,N,V
+is0320,Test data,1,A,L,V
+is0321,Test data,1,A,N,V
+is0322,Test data,1,A,N,V
+is0323,Test data,1,A,L,V
+is0324,Test data,1,P,L,V
+is0326,Test data,1,A,L,V
+is0327,Test data,1,A,N,V
+is0328,Test data,1,A,L,V
+is0329,Test data,1,A,N,V
+is0330,Test data,1,P,L,V
+is0331,Test data,1,A,N,V
+is0333,Test data,1,A,L,V
+is0334,Test data,1,A,N,V
+is0335,Test data,1,P,N,V
+is0336,Test data,1,P,L,V
+is0337,Test data,1,P,N,V
+is0338,Test data,1,A,N,V
+is0339,Test data,1,A,N,V
+is0340,Test data,1,A,N,V
+is0341,Test data,1,P,L,V
+is0342,Test data,1,P,L,V
+is0343,Test data,1,P,N,V
+is0344,Test data,1,P,L,V
+is0345,Test data,1,P,L,V
+is0346,Test data,1,A,N,V
+is0347,Test data,1,A,L,V
+is0348,Test data,1,A,L,V
+is0349,Test data,1,A,L,V
+is0350,Test data,1,A,L,V
