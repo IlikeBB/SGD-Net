@@ -146,9 +146,9 @@ def trainer():
     # Because the author has made a major update to the kit, some kits are affected and the rotation-related functions cannot be used.
 # */----------------------------------/*
     aug_img = A.Compose([
-#         A.HorizontalFlip(p=0.5),
+        A.HorizontalFlip(p=0.5),
 #         A.Rotate(limit=5, p=0.5),
-        A.ShiftScaleRotate(rotate_limit=5,p=0.3),
+#         A.ShiftScaleRotate(rotate_limit=5,p=0.3),
         ],)  
 
     # dataloaders
