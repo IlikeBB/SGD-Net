@@ -159,8 +159,8 @@ if __name__ == '__main__':
     checkpoint_name = f"{model_n}-{nii_size}-{class_n}-epochs_{epochs}-lr_{lr}-batch_{batch_size}-FL{config['focal_alpha']}-{date_name}"
     tlogdir = os.path.join(config['save_path'], checkpoint_name)
     # load path-url.npy and load label.npy
-    train_path_30T = np.load(MRI_nii_folder_path + 'T3_image_mask_path_train.npy')
-    valid_path_30T = np.load(MRI_nii_folder_path + 'T3_image_mask_path_valid.npy')
+#     train_path_30T = np.load(MRI_nii_folder_path + 'T3_image_mask_path_train.npy')
+#     valid_path_30T = np.load(MRI_nii_folder_path + 'T3_image_mask_path_valid.npy')
 
     # creative weight and tensorboard path folder
     if not os.path.exists(save_path):
