@@ -30,7 +30,7 @@ GPU: Nvidia GTX 1080Ti x 1
 !pip install scikit-image
 ```
 > * Loading nii or nii.gz data and transformation to numpy data array.
-> * Please refer to `nii data loading.ipynb` build your dataset array or build random data array.
+> * Please refer to `00.nii data loading.ipynb` build your dataset array or build random data array.
 ```
  example:
  ./data_set/...
